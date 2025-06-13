@@ -8,7 +8,6 @@ function App() {
 		name: "",
 		email: "",
 		phone: "",
-		education: "",
 		location: "",
 		experiences: [
 			{
@@ -37,12 +36,12 @@ function App() {
 				projectDescription: "",
 			},
 		],
-		skills: [{
-			category:"",
-			items: [],
-		}],
-
-		
+		skills: [
+			{
+				category: "",
+				items: [],
+			},
+		],
 	});
 	const previewRef = useRef();
 	return (
@@ -51,7 +50,11 @@ function App() {
 				<div className="logo"></div>CV Builder
 			</header>
 			<main>
-				<Left formData={formData} setFormData={setFormData} previewRef={previewRef} />
+				<Left
+					formData={formData}
+					setFormData={setFormData}
+					previewRef={previewRef}
+				/>
 
 				<Right formData={formData} previewRef={previewRef} />
 			</main>
