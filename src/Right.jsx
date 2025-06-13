@@ -1,7 +1,7 @@
-function Right({ formData }) {
+function Right({ formData, previewRef }) {
 	return (
 		<div className="right">
-			<div className="preview">
+			<div className="preview" ref={previewRef}>
 				{/* Header Section */}
 				<h1>{formData.name || "John Doe"}</h1>
 				<div className="contact-info">
@@ -13,73 +13,84 @@ function Right({ formData }) {
 				{/* EXPERIENCE */}
 				<section>
 					<h2 className="section-title">EXPERIENCE</h2>
-					<div className="cv-item">
-						<div className="cv-left">
-							<p className="title">
-								{formData.jobTitle || "Frontend Developer"}
-							</p>
-
-							<p className="italic">{formData.company || "XYZ Company"}</p>
-
-							<p className="description">
-								{formData.experienceDescription ||
-									"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed d magna aliqua."}
-							</p>
+					{formData.experiences.map((exp, index) => (
+						<div className="cv-item" key={index}>
+							<div className="cv-left">
+								<p className="title">{exp.jobTitle || "Job Title"}</p>
+								<p className="italic">{exp.company || "Company ABC"}</p>
+								<p className="description">
+									{exp.experienceDescription || "Description..."}
+								</p>
+							</div>
+							<div className="cv-right">
+								<p>
+									{exp.jobStartDate || "Jan 2020"} -{" "}
+									{exp.jobEndDate || "Present"}
+								</p>
+								<p>{exp.jobLocation || "New York"}</p>
+							</div>
 						</div>
-						<div className="cv-right">
-							<p>
-								{formData.jobStartDate || "Jan 2020"} -{" "}
-								{formData.jobEndDate || "Present"}
-							</p>
-
-							<p>{formData.jobLocation || "New York"}</p>
-						</div>
-					</div>
+					))}
 				</section>
 
 				{/* EDUCATION */}
 				<section>
 					<h2 className="section-title">EDUCATION</h2>
-					<div className="cv-item">
-						<div className="cv-left">
-							<p className="title">{formData.school || "University Name"}</p>
+					{formData.education.map((edu, index) => (
+						<div className="cv-item" key={index}>
+							<div className="cv-left">
+								<p className="title">{edu.school || "University Name"}</p>
 
-							<p className="italic">{formData.degree || "Degree"}</p>
+								<p className="italic">{edu.degree || "Degree"}</p>
 
-							<p className="description">
-								{formData.educationDescription ||
-									"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed d magna aliqua."}
-							</p>
+								<p className="description">
+									{edu.educationDescription ||
+										"Description of your education..."}
+								</p>
+							</div>
+							<div className="cv-right">
+								<p>
+									{edu.educationStartDate || "Jan 2020"} -{" "}
+									{edu.educationEndDate || "Present"}
+								</p>
+								<p>{edu.educationLocation || "New York"}</p>
+							</div>
 						</div>
-						<div className="cv-right">
-							<p>
-								{formData.educationStartDate || "Jan 2020"} -{" "}
-								{formData.educationEndDate || "Present"}
-							</p>
-							<p>{formData.educationLocation || "New York"}</p>
-						</div>
-					</div>
+					))}
 				</section>
 
 				{/* PROJECTS */}
 				<section>
 					<h2 className="section-title">PROJECTS</h2>
-					<div className="cv-item">
-						<div className="cv-left">
-							<p className="title">{formData.projectTitle || "Project A"}</p>
-							<p className="italic">{formData.projectSubtitle || "Subtitle"}</p>
-							<p className="description">
-								{formData.projectDescription ||
-									"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed d magna aliqua."}
-							</p>
+					{formData.projects.map((proj, index) => (
+						<div className="cv-item" key={index}>
+							<div className="cv-left">
+								<p className="title">{proj.projectTitle || "Project Title"}</p>
+								<p className="italic">
+									{proj.projectSubtitle || "Role"}
+								</p>
+								<p className="description">
+									{proj.projectDescription ||
+										"Brief description of the project..."}
+								</p>
+							</div>
 						</div>
-					</div>
+					))}
 				</section>
 
 				{/* SKILLS */}
 				<section>
 					<h2 className="section-title">SKILLS</h2>
-					<p className="description">{formData.skillCategory || "Web Development"}:</p>
+					{formData.skills?.length > 0 ? (
+						formData.skills.map((cat, i) => (
+							<p key={i} className="skillSection">
+								<strong>{cat.category || "Category"}:</strong>{" "}
+								{cat.items?.filter(Boolean).join(", ") || "None"}
+							</p>
+						))
+					) : (
+						<p>No skills added yet.</p>
+					)}
 				</section>
 			</div>
 		</div>

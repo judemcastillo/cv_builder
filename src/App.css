@@ -50,6 +50,7 @@ main {
 	justify-content: center;
 	overflow-y: auto;
 	padding: 30px;
+	padding-top: 0px;
 	gap: 25px;
 }
 .left::-webkit-scrollbar {
@@ -140,18 +141,17 @@ main {
 }
 
 .preview {
-	display: flex;
-	flex-direction: column;
-	background-color: white;
-	border-radius: 10px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-	overflow-y: auto;
-	aspect-ratio: 1.33;
-	padding: 30px;
-	width: 100%;
-	height: 100%; /* minus header height */
-	justify-self: flex-start;
+  display: block; /* no flex needed inside the PDF container */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 794px;           /* A4 width at 96 DPI */
+  min-height: 1123px;     /* A4 height at 96 DPI */
+  box-sizing: border-box;
+  overflow: visible;
 }
+
 
 .accordion-section {
 	background-color: #fff;
@@ -252,6 +252,7 @@ main {
 	flex-direction: column;
 	gap: 10px;
 	justify-content: flex-start;
+	justify-self: flex-start;
 	min-height: calc(100vh - 200px);
 	h1 {
 		padding-bottom: 30px;
@@ -410,3 +411,70 @@ main {
 	font-size: 13px;
 	padding: 5px 0px;
 }
+.skillButton {
+	background-color: #0b7c60de;
+	color: white;
+	border: none;
+	padding: 0px 16px;
+	border-radius: 20px;
+	cursor: pointer;
+	font-size: 0.9rem;
+	font-weight: bold;
+	transition: background-color 0.3s ease, transform 0.3s ease;
+	width: fit-content;
+	height: 38px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+	align-self: flex-start;
+	will-change: transform;
+}
+.skillButton:hover {
+	background-color: #085e4a;
+	transform: scale(1.05);
+	transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.skillItem {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	align-items: center;
+	min-width: 250px;
+	width: fit-content;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	padding: 3px 2px;
+	font-size: 0.2rem;
+}
+.skillItem input {
+	background-color: transparent;
+	border: none;
+	font-size: 0.9rem;
+}
+.skillDelButton {
+	mask: url("./assets/close.svg") no-repeat center;
+	-webkit-mask: url("./assets/close.svg") no-repeat center;
+	mask-size: contain;
+	-webkit-mask-size: contain;
+	background-color: rgba(7, 7, 7, 0.884);
+	width: 22px;
+	height: 22px;
+	margin-right: 5px;
+	cursor: pointer;
+	transition: transform 0.3s ease, background-color 0.3s ease;
+
+	/* 👇 GPU acceleration for smoother transform */
+	will-change: transform;
+}
+
+.skillDelButton:hover {
+	background-color: rgb(131, 4, 4);
+	transform: scale(1.05);
+	transition:  transform 0.3s ease,background-color 0.3s ease;
+}
+.skillSection{
+	
+	padding-top: 10px;
+}
+

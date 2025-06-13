@@ -1,11 +1,67 @@
 import { useState } from "react";
 import Accordion from "./components/Accordion";
-function Left({ formData, setFormData }) {
+import Education from "./components/Education";
+import Projects from "./components/Projects";
+import Experience from "./components/Experience";
+import Skills from "./components/Skills";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+
+function Left({ formData, setFormData, previewRef }) {
 	const [started, setStarted] = useState(false);
-	
+
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
+	};
+
+	const handleDownloadPDF = async () => {
+		const input = previewRef.current;
+		if (!input) return;
+
+		const canvas = await html2canvas(input, {
+			scale: 2,
+			useCORS: true,
+			windowWidth: input.scrollWidth, // ensure full width
+		});
+
+		const imgData = canvas.toDataURL("image/png");
+		const pdf = new jsPDF("p", "mm", "a4");
+		const pageHeight = pdf.internal.pageSize.getHeight();
+		const pageWidth = pdf.internal.pageSize.getWidth();
+
+		const imgWidth = pageWidth;
+		const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+		let y = 0;
+		while (y < imgHeight) {
+			const pageCanvas = document.createElement("canvas");
+			const pageContext = pageCanvas.getContext("2d");
+
+			const pageHeightPx = (canvas.width * pageHeight) / pageWidth;
+			pageCanvas.width = canvas.width;
+			pageCanvas.height = pageHeightPx;
+
+			pageContext.drawImage(
+				canvas,
+				0,
+				y * (canvas.height / imgHeight),
+				canvas.width,
+				pageHeightPx,
+				0,
+				0,
+				canvas.width,
+				pageHeightPx
+			);
+
+			const pageImg = pageCanvas.toDataURL("image/png");
+			if (y !== 0) pdf.addPage();
+			pdf.addImage(pageImg, "PNG", 0, 0, pageWidth, pageHeight);
+
+			y += pageHeight;
+		}
+
+		pdf.save("cv.pdf");
 	};
 
 	return (
@@ -66,185 +122,17 @@ function Left({ formData, setFormData }) {
 							/>
 						</div>
 					</Accordion>
-					<Accordion title="Experience">
-						<div className="accordionChildren">
-							<h4>Job Title</h4>
-							<input
-								type="text"
-								placeholder="Enter Job Title"
-								name="jobTitle"
-								value={formData.jobTitle}
-								onChange={handleChange}
-							/>
-							<h4>Company</h4>
-							<input
-								type="text"
-								placeholder="Enter Company"
-								name="company"
-								value={formData.company}
-								onChange={handleChange}
-							/>
-							<h4>
-								Location <span className="optional">optional</span>
-							</h4>
-							<input
-								type="text"
-								placeholder="Enter Location"
-								name="jobLocation"
-								value={formData.jobLocation}
-								onChange={handleChange}
-							/>
-							<div className="flexRow">
-								<div>
-									<h4>Start Date</h4>
-									<input
-										type="text"
-										name="jobStartDate"
-										value={formData.jobStartDate}
-										onChange={handleChange}
-										placeholder="e.g. Jan 2020 or Present"
-									/>
-								</div>
-								<div>
-									<h4>End Date</h4>
-									<input
-										type="text"
-										name="jobEndDate"
-										value={formData.jobEndDate}
-										onChange={handleChange}
-										placeholder="e.g. Jan 2020 or Present"
-									/>
-								</div>
-							</div>
-							<h4>Description</h4>
-							<textarea
-								placeholder="Describe your role and achievements"
-								name="experienceDescription"
-								value={formData.experienceDescription}
-								onChange={handleChange}
-							/>
-							<button className="delButton">
-								<div className="delete-icon"></div>Delete
-							</button>
-							<hr />
-							<button className="addButton">+ Experience</button>
-						</div>
-					</Accordion>
+					<Experience formData={formData} setFormData={setFormData} />
 
-					<Accordion title="Education">
-						<div className="accordionChildren">
-							<h4>School</h4>
-							<input
-								type="text"
-								name="school"
-								value={formData.school}
-								onChange={handleChange}
-								placeholder="Enter School"
-							/>
-							<h4>Degree</h4>
-							<input
-								type="text"
-								name="degree"
-								value={formData.degree}
-								onChange={handleChange}
-								placeholder="Enter Degree"
-							/>
-							<h4>Location</h4>
-							<input
-								type="text"
-								name="educationLocation"
-								value={formData.educationLocation}
-								onChange={handleChange}
-								placeholder="Enter Location"
-							/>
-							<div className="flexRow">
-								<div>
-									<h4>Start Date</h4>
-									<input
-										type="text"
-										name="educationStartDate"
-										value={formData.educationStartDate}
-										onChange={handleChange}
-										placeholder="e.g. Jan 2020 or Present"
-									/>
-								</div>
-								<div>
-									<h4>End Date</h4>
-									<input
-										type="text"
-										name="educationEndDate"
-										value={formData.educationEndDate}
-										onChange={handleChange}
-										placeholder="e.g. Jan 2020 or Present"
-									/>
-								</div>
-							</div>
-							<h4>Description</h4>
-							<textarea
-								placeholder="Describe your studies and achievements"
-								name="educationDescription"
-								value={formData.educationDescription}
-								onChange={handleChange}
-							/>
-							<button className="delButton">
-								<div className="delete-icon"></div>Delete
-							</button>
-							<hr />
-							<button className="addButton">+ Education</button>
-						</div>
-					</Accordion>
+					<Education formData={formData} setFormData={setFormData} />
 
-					<Accordion title="Projects">
-						<div className="accordionChildren">
-							<h4>Project Title</h4>
-							<input
-								type="text"
-								name="projectTitle"
-								value={formData.projectTitle}
-								placeholder="Enter Project Title"
-								onChange={handleChange}
-							/>
-							<h4>Sub Title</h4>
-							<input
-								type="text"
-								name="projectSubtitle"
-								value={formData.projectSubtitle}
-								placeholder="Enter Project Sub Title"
-								onChange={handleChange}
-							/>
-							<h4>Description</h4>
-							<textarea
-								name="projectDescription"
-								value={formData.projectDescription}
-								placeholder="Enter Project Description"
-								onChange={handleChange}
-							/>
-							<button className="delButton">
-								<div className="delete-icon"></div>Delete
-							</button>
-							<hr />
-							<button className="addButton">+ Projects</button>
-						</div>
-					</Accordion>
+					<Projects formData={formData} setFormData={setFormData} />
 
-					<Accordion title="Skills">
-						<div className="accordionChildren">
-							<h4>Category Name</h4>
-							<input
-								type="text"
-								name="skillCategory"
-								value={formData.skillCategory}
-								onChange={handleChange}
-								placeholder="Enter Skill Category"
-							/>
-							<button>+ Skill</button>
-							<button className="delButton">Delete</button>
-							<hr />
-							<button className="addButton">+ Category</button>
-						</div>
-					</Accordion>
+					<Skills formData={formData} setFormData={setFormData} />
 
-					<button className="pdfButton"><div className="downloadIcon"></div>Download as PDF</button>
+					<button className="pdfButton" onClick={handleDownloadPDF}>
+						<div className="downloadIcon"></div>Download as PDF
+					</button>
 				</div>
 			)}
 		</div>
